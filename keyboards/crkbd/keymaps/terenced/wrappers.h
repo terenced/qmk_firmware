@@ -1,17 +1,26 @@
 #pragma once
 // clang-format off
 
-enum layer_names { 
-  _QWERTY, 
-  _COLEMAKDHM,
-  _NAV, 
-  _NUM, 
-  _SYM, 
-  _ADJUST 
+enum layers {
+    _QWERTY,
+    _COLEMAKDHM,
+    _NAV,
+    _SYM,
+    _NUM,
+    _ADJUST
 };
 
-#define COLEMAK DF(_COLEMAKDHM)
+enum custom_keycodes {
+    KC_QWERTY = SAFE_RANGE,
+    KC_COLEMAK,
+    KC_NAV,
+    KC_NUM,
+    KC_SYM,
+    KC_ADJUST
+};
+
 #define QWERTY DF(_QWERTY)
+#define COLEMAK DF(_COLEMAKDHM)
 
 // Layer toggle and switch
 #define T_NAV TT(_NAV)
@@ -95,7 +104,7 @@ enum layer_names {
 #define ________________NAV_L2_____________________ _______ , _______ , _______ , _______ , _______
 #define ________________NAV_L3_____________________ _______ , _______ , _______ , _______ , _______
 
-#define ________________NAV_R1_____________________ _______ , _______ , _______ , _______ , _______ 
+#define ________________NAV_R1_____________________ _______ , _______ , _______ , _______ , _______
 #define ________________NAV_R2_____________________ _______ , KC_LEFT , KC_DOWN , KC_UP   , KC_RIGHT
 #define ________________NAV_R3_____________________ _______ , KC_HOME , KC_PGDN , KC_PGUP , KC_END
 
