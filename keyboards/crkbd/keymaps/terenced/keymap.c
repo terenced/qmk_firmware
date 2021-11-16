@@ -21,68 +21,59 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wrappers.h"
 
 // clang-format off
-enum layer_names { 
-  _QWERTY, 
-  _COLEMAKDHM,
-  _NAV, 
-  _NUM, 
-  _SYM, 
-  _ADJUST 
-};
 
 #define LAYOUT_crkbd_base( \
-    K01, K02, K03, K04, K05, K06, K07, K08, K09, K0A,\
-    K11, K12, K13, K14, K15, K16, K17, K18, K19, K1A,\
-    K21, K22, K23, K24, K25, K26, K27, K28, K29, K2A \
+    K01, K02, K03, K04, K05, K06, K07, K08, K09, K0A, \
+    K11, K12, K13, K14, K15, K16, K17, K18, K19, K1A, \
+    K21, K22, K23, K24, K25, K26, K27, K28, K29, K2A  \
   ) \
-  LAYOUT_wrapper(\
-    KC_TAB  , K01   , K02    , K03    , K04   , K05       , K06 , K07 , K08 , K09 , K0A , KC_BSPC , \
-    ESC_NUM , K11   , K12    , K13    , K14   , K15       , K16 , K17 , K18 , K19 , K1A , KC_QUOT , \
-    KC_LSFT , K21   , K22    , K23    , K24   , K25       , K26 , K27 , K28 , K29 , K2A , SFT_ENT , \
-                              KC_LGUI , T_NAV , KC_SPC    , KC_ENT , T_SYM , KC_RGUI \
+  LAYOUT_wrapper( \
+    KC_TAB    , K01   , K02    , K03    , K04   , K05       , K06 , K07 , K08 , K09 , K0A , KC_BSPC   , \
+    ESC_NUM   , K11   , K12    , K13    , K14   , K15       , K16 , K17 , K18 , K19 , K1A , KC_QUOT   , \
+    KC_LSHIFT , K21   , K22    , K23    , K24   , K25       , K26 , K27 , K28 , K29 , K2A , KC_SFTENT , \
+    KC_LGUI   , TT(_NAV) , KC_SPC , KC_ENT , TT(_SYM) , KC_RGUI \
   )
-/* Re-pass though to allow templates to be used */
-#define LAYOUT_corne_wrapper(...)       LAYOUT_crkbd_base(__VA_ARGS__)
+#define LAYOUT_crkbd_base_wrapper(...) LAYOUT_crkbd_base(__VA_ARGS__)
 // clan-format on
-
-// Base layers
-/* #define COLEMAK DF(_COLEMAKDHM) */
-/* #define QWERTY DF(_QWERTY) */
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_QWERTY] = LAYOUT_corne_wrapper(
-      _________________QWERTY_L1_________________, _________________QWERTY_R1_________________,
-      _________________QWERTY_L2_________________, _________________QWERTY_R2_________________,
-      _________________QWERTY_L3_________________, _________________QWERTY_R3_________________
+    [_QWERTY] = LAYOUT_crkbd_base_wrapper(
+        _________________QWERTY_L1_________________, _________________QWERTY_R1_________________, 
+        _________________QWERTY_L2_________________, _________________QWERTY_R2_________________, 
+        _________________QWERTY_L3_________________, _________________QWERTY_R3_________________
     ),
-    /* [_COLEMAKDHM] = LAYOUT_corne_wrapper( */
-    /*   ______________COLEMAK_MOD_DH_L1____________, ______________COLEMAK_MOD_DH_R1____________, */
-    /*   ______________COLEMAK_MOD_DH_L2____________, ______________COLEMAK_MOD_DH_R2____________, */
-    /*   ______________COLEMAK_MOD_DH_L3____________, ______________COLEMAK_MOD_DH_R3____________ */
-    /* ), */
-    /* [_NAV] = LAYOUT_corne_wrapper( */
-    /*  __________________NAV_L1___________________, __________________NAV_R1___________________  */
-    /*  __________________NAV_L2___________________, __________________NAV_R2___________________  */
-    /*  __________________NAV_L3___________________, __________________NAV_R3___________________  */
-    /* ), */
-    /* [_SYM] = LAYOUT_corne_wrapper( */
-    /*  __________________SYM_L1___________________, __________________SYM_R1___________________  */
-    /*  __________________SYM_L2___________________, __________________SYM_R2___________________  */
-    /*  __________________SYM_L3___________________, __________________SYM_R3___________________  */
-    /* ), */
-    /* [_NUM] = LAYOUT_corne_wrapper( */
-    /*   ________________NUMBER_L1__________________, ________________NUMBER_R1__________________   */
-    /*   ________________NUMBER_L2__________________, ________________NUMBER_R2__________________   */
-    /*   ________________NUMBER_L3__________________, ________________NUMBER_R3__________________   */
-    /* ), */
-    /* [_ADJUST] = LAYOUT_corne_wrapper( */
-    /*   ________________ADJUST_L1__________________, ________________ADJUST_R1__________________   */
-    /*   ________________ADJUST_L2__________________, ________________ADJUST_R2__________________   */
-    /*   ________________ADJUST_L3__________________, ________________ADJUST_R3__________________   */
-    /* ) */
+    [_COLEMAKDHM] = LAYOUT_crkbd_base_wrapper(
+        ______________COLEMAK_MOD_DH_L1____________ , ______________COLEMAK_MOD_DH_R1____________ ,
+        ______________COLEMAK_MOD_DH_L2____________ , ______________COLEMAK_MOD_DH_R2____________ ,
+        ______________COLEMAK_MOD_DH_L3____________ , ______________COLEMAK_MOD_DH_R3____________
+    ),
+    [_NAV] = LAYOUT_wrapper(
+      _______ , ________________NAV_L1_____________________ , ________________NAV_R1_____________________ , _______ ,
+      _______ , ________________NAV_L2_____________________ , ________________NAV_R2_____________________ , _______ ,
+      _______ , ________________NAV_L3_____________________ , ________________NAV_R3_____________________ , _______ ,
+                                  _______ , _______, _______, _______ , _______, _______
+    ),
+    [_NUM] = LAYOUT_wrapper(
+      _______ , ________________NUMBER_L1__________________ , ________________NUMBER_R1__________________ , _______ ,
+      _______ , ________________NUMBER_L2__________________ , ________________NUMBER_R2__________________ , _______ ,
+      _______ , ________________NUMBER_L3__________________ , ________________NUMBER_R3__________________ , _______ ,
+                                  _______ , _______, _______, _______ , _______, _______
+    ),
+    [_SYM] = LAYOUT_wrapper(
+       KC_TILD , __________________SYM_L1___________________ , __________________SYM_R1___________________ , _______ ,
+       KC_GRV  , __________________SYM_L2___________________ , __________________SYM_R2___________________ , _______ ,
+       _______ , __________________SYM_L3___________________ , __________________SYM_R3___________________ , _______ ,
+                                  _______ , _______, _______, _______ , _______, _______
+    ),
+    // [_ADJUST] = LAYOUT_wrapper(
+    //   _______ , ________________ADJUST_L1__________________ , ________________ADJUST_R1__________________ , _______ ,
+    //   _______ , ________________ADJUST_L2__________________ , ________________ADJUST_R2__________________ , _______ ,
+    //   _______ , ________________ADJUST_L3__________________ , ________________ADJUST_R3__________________ , _______ ,
+    //                               _______ , _______, _______, _______ , _______, _______
+    // )
 };
-
+// clang-format on
 #ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (!is_keyboard_master()) {
@@ -101,7 +92,7 @@ void oled_render_layer_state(void) {
             oled_write_ln_P(PSTR("QWERTY"), false);
             break;
         case _NAV:
-            oled_write_ln_P(PSTR("Nav"), false);
+            oled_write_ln_P(PSTR("NAV"), false);
             break;
         case _SYM:
             oled_write_ln_P(PSTR("SYN"), false);
@@ -110,10 +101,13 @@ void oled_render_layer_state(void) {
             oled_write_ln_P(PSTR("NUM"), false);
             break;
         case _ADJUST:
-        /* case _ADJUST | _SYM: */
-        /* case _ADJUST | _NAV: */
-        /* case _ADJUST | _SYM | _NAV: */
+            /* case _ADJUST | _SYM: */
+            /* case _ADJUST | _NAV: */
+            /* case _ADJUST | _SYM | _NAV: */
             oled_write_ln_P(PSTR("Adjust"), false);
+            break;
+        default:
+            oled_write_ln_P(PSTR("WHAT!!!!"), false);
             break;
     }
 }
