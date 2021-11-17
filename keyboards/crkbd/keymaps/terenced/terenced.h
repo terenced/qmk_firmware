@@ -1,8 +1,8 @@
 #pragma once
-// clang-format off
 
-enum layers {
-    _QWERTY,
+// clang-format off
+enum layer_names {
+    _QWERTY = 0,
     _COLEMAKDHM,
     _NAV,
     _SYM,
@@ -11,28 +11,17 @@ enum layers {
 };
 
 enum custom_keycodes {
-    KC_QWERTY = SAFE_RANGE,
-    KC_COLEMAK,
-    KC_NAV,
-    KC_NUM,
-    KC_SYM,
-    KC_ADJUST
+    QWERTY = SAFE_RANGE,
+    COLEMAK,
 };
-
-#define QWERTY DF(_QWERTY)
-#define COLEMAK DF(_COLEMAKDHM)
 
 // Layer toggle and switch
 #define T_NAV TT(_NAV)
-#define S_NAV MO(_NAV)
-
 #define T_SYM TT(_SYM)
-#define S_SYM MO(_SYM)
+
 
 // Layer keys with functionality on tap
-#define NAV_0 LT(_NAV, KC_0)
-#define ESC_NUM LT(_NUM, KC_ESC)
-#define SFT_ENT
+#define T_ESC_N LT(_NUM, KC_ESC)
 
 #define U_RDO SGUI(KC_Z)
 #define U_PST LGUI(KC_V)
@@ -92,28 +81,28 @@ enum custom_keycodes {
 #define __________________SYM_R2___________________ _______ , _______ , _______ , _______ , _______
 #define __________________SYM_R3___________________ KC_ASTR , _______ , _______ , _______ , _______
 
-#define ________________NUMBER_L1__________________ _______ , _______ , _______ , _______ , _______
-#define ________________NUMBER_L2__________________ _______ , _______ , _______ , _______ , _______
-#define ________________NUMBER_L3__________________ _______ , _______ , _______ , _______ , _______
+#define ________________NUMBER_L1__________________ KC_F1   , KC_F2   , KC_F3   , KC_F4  , KC_F5
+#define ________________NUMBER_L2__________________ KC_F6   , KC_F7   , KC_F8   , KC_F9  , KC_F10
+#define ________________NUMBER_L3__________________ _______ , _______ , _______ , KC_F11 , KC_F12
 
 #define ________________NUMBER_R1__________________ KC_PAUS , KC_7    , KC_8    , KC_9    , KC_MINS
 #define ________________NUMBER_R2__________________ KC_ASTR , KC_4    , KC_5    , KC_6    , KC_PLUS
 #define ________________NUMBER_R3__________________ KC_0    , KC_1    , KC_2    , KC_3    , KC_EQL
 
-#define ________________NAV_L1_____________________ _______ , _______ , _______ , _______ , _______
+#define ________________NAV_L1_____________________ _______ , _______ , _______ , _______ , U_UND
 #define ________________NAV_L2_____________________ _______ , _______ , _______ , _______ , _______
 #define ________________NAV_L3_____________________ _______ , _______ , _______ , _______ , _______
 
-#define ________________NAV_R1_____________________ _______ , _______ , _______ , _______ , _______
+#define ________________NAV_R1_____________________ _______ , U_CPY   , U_PST   , U_CMPST , _______
 #define ________________NAV_R2_____________________ _______ , KC_LEFT , KC_DOWN , KC_UP   , KC_RIGHT
 #define ________________NAV_R3_____________________ _______ , KC_HOME , KC_PGDN , KC_PGUP , KC_END
 
 
-#define ________________ADJUST_L1__________________ QWERTY  , _______ , _______ , _______ , BL_TOGG
-#define ________________ADJUST_L2__________________ _______ , _______ , COLEMAK , _______ , BL_STEP
-#define ________________ADJUST_L3__________________ _______ , _______ , _______ , _______ , BL_BRTG
+#define ________________ADJUST_L1__________________ QWERTY  , _______ , _______ , _______ , KC_NLCK
+#define ________________ADJUST_L2__________________ _______ , _______ , COLEMAK , _______ , KC_CAPS
+#define ________________ADJUST_L3__________________ _______ , _______ , _______ , _______ , _______
 
-#define ________________ADJUST_R1__________________ RESET   , _______ , _______ , _______ , _______
-#define ________________ADJUST_R2__________________ _______ , _______ , _______ , _______ , _______
-#define ________________ADJUST_R3__________________ _______ , _______ , _______ , _______ , _______
+#define ________________ADJUST_R1__________________ RGB_TOG , RGB_M_P , RGB_M_K , _______ , RESET
+#define ________________ADJUST_R2__________________ RGB_MOD , RGB_M_B , _______ , _______ , _______
+#define ________________ADJUST_R3__________________ RGB_M_T , RGB_M_R , _______ , _______ , _______
 // clang-format on

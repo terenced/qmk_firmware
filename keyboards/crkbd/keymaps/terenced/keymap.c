@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include QMK_KEYBOARD_H
 #include <stdio.h>
-
-#include "wrappers.h"
+#include "print.h"
+#include "terenced.h"
 
 // clang-format off
 
@@ -29,9 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     ) \
     LAYOUT_wrapper( \
         KC_TAB    , K01   , K02    , K03    , K04   , K05       , K06 , K07 , K08 , K09 , K0A , KC_BSPC   , \
-        ESC_NUM   , K11   , K12    , K13    , K14   , K15       , K16 , K17 , K18 , K19 , K1A , KC_QUOT   , \
+        T_ESC_N   , K11   , K12    , K13    , K14   , K15       , K16 , K17 , K18 , K19 , K1A , KC_QUOT   , \
         KC_LSHIFT , K21   , K22    , K23    , K24   , K25       , K26 , K27 , K28 , K29 , K2A , KC_SFTENT , \
-        KC_LGUI   , TT(_NAV) , KC_SPC , KC_ENT , TT(_SYM) , KC_RGUI \
+        KC_LGUI   , T_NAV , KC_SPC , KC_ENT , T_SYM , KC_RGUI \
     )
 #define LAYOUT_crkbd_base_wrapper(...) LAYOUT_crkbd_base(__VA_ARGS__)
 // clan-format on
@@ -60,18 +60,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______ , __________________SYM_L3___________________ , __________________SYM_R3___________________ , _______ ,
                                     _______ , _______, _______, _______ , _______, _______
     ),
+    [_ADJUST] = LAYOUT_wrapper(
+        _______ , ________________ADJUST_L1__________________ , ________________ADJUST_R1__________________ , _______ ,
+        _______ , ________________ADJUST_L2__________________ , ________________ADJUST_R2__________________ , _______ ,
+        _______ , ________________ADJUST_L3__________________ , ________________ADJUST_R3__________________ , _______ ,
+                                    _______ , _______, _______, _______ , _______, _______
+    ),
     [_NUM] = LAYOUT_wrapper(
         _______ , ________________NUMBER_L1__________________ , ________________NUMBER_R1__________________ , _______ ,
         _______ , ________________NUMBER_L2__________________ , ________________NUMBER_R2__________________ , _______ ,
         _______ , ________________NUMBER_L3__________________ , ________________NUMBER_R3__________________ , _______ ,
                                     _______ , _______, _______, _______ , _______, _______
     ),
-    [_ADJUST] = LAYOUT_wrapper(
-        _______ , ________________ADJUST_L1__________________ , ________________ADJUST_R1__________________ , _______ ,
-        _______ , ________________ADJUST_L2__________________ , ________________ADJUST_R2__________________ , _______ ,
-        _______ , ________________ADJUST_L3__________________ , ________________ADJUST_R3__________________ , _______ ,
-                                    _______ , _______, _______, _______ , _______, _______
-    )
 };
 // clang-format on
 #ifdef OLED_ENABLE
@@ -81,23 +81,27 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     }
     return rotation;
 }
-
 void oled_render_layer_state(void) {
     oled_write_P(PSTR("Layer: "), false);
-    if(layer_state_is(_QWERTY)) {
-        oled_write_ln_P(PSTR("QWERTY"), false);
-    } else if(layer_state_is(_COLEMAKDHM)) {
-        oled_write_ln_P(PSTR("COLEMAK"), false);
-    } else if(layer_state_is(_NAV)) {
-        oled_write_ln_P(PSTR("NAV"), false);
-    } else if(layer_state_is(_NUM)) {
-        oled_write_ln_P(PSTR("NUM"), false);
-    }  else if(layer_state_is(_SYM)) {
-        oled_write_ln_P(PSTR("SYM"), false);
-    } else {
-        oled_write_ln_P(PSTR("UKNOWN"), false);
+    switch (get_highest_layer(layer_state)) {
+        case _QWERTY:
+            oled_write_ln_P(PSTR("QWERTY"), false);
+            break;
+        case _COLEMAKDHM:
+            oled_write_ln_P(PSTR("COLEMAK"), false);
+            break;
+        case _NAV:
+            oled_write_ln_P(PSTR("_NAV"), false);
+            break;
+        case _SYM:
+            oled_write_ln_P(PSTR("_SYM"), false);
+            break;
+        case _ADJUST:
+            oled_write_ln_P(PSTR("ADJUST"), false);
+            break;
     }
 }
+
 
 char keylog_str[24] = {};
 
@@ -158,11 +162,53 @@ void oled_task_user(void) {
 }
 #endif  // OLED_ENABLE
 
+layer_state_t layer_state_set_user(layer_state_t state) {
+    return update_tri_layer_state(state, _NAV, _SYM, _ADJUST);
+}
+
+void persistent_default_layer_set(uint16_t default_layer) {
+    print("SET DEFAULT\n");
+    eeconfig_update_default_layer(default_layer);
+    default_layer_set(default_layer);
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef OLED_ENABLE
     if (record->event.pressed) {
         set_keylog(keycode, record);
     }
 #endif
+#ifdef CONSOLE_ENABLE
+    uprintf("KL: kc: 0x%04X, %u x %u, Q: 0x%04X, C: 0x%04X, E: 0x%04X\n", keycode, record->event.key.col, record->event.key.row, QWERTY, COLEMAK, T_ESC_N);
+#endif
+    switch (keycode)
+    {
+        case QWERTY:
+            if (record->event.pressed)
+            {
+                print("QWERTY\n");
+                persistent_default_layer_set(1UL<<_QWERTY);
+            }
+            return false;
+            break;
+        case COLEMAK:
+            if (record->event.pressed)
+            {
+                print("COLEMAK\n");
+                persistent_default_layer_set(1UL<<_COLEMAKDHM);
+            }
+            return false;
+            break;
+        default:
+            break;
+    }
     return true;
+}
+
+void keyboard_post_init_user(void) {
+  // Customise these values to desired behaviour
+  debug_enable=true;
+//   debug_matrix=true;
+  debug_keyboard=true;
+  //debug_mouse=true;
 }
