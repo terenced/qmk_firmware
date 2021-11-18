@@ -1,117 +1,163 @@
-/*
-Copyright 2019 @foostan
-Copyright 2020 Drashna Jaelre <@drashna>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
 #include QMK_KEYBOARD_H
 #include <stdio.h>
-#include "print.h"
-#include "terenced.h"
 
-// clang-format off
+#define _COLEMAKDHM  0
+#define _QWERTY  1
+#define _NAV 2
+#define _SYMBOLS 3
+#define _NUMBERS 4
+#define _MISC  5
 
-#define LAYOUT_crkbd_base( \
-    K01, K02, K03, K04, K05, K06, K07, K08, K09, K0A, \
-    K11, K12, K13, K14, K15, K16, K17, K18, K19, K1A, \
-    K21, K22, K23, K24, K25, K26, K27, K28, K29, K2A  \
-    ) \
-    LAYOUT_wrapper( \
-        KC_TAB    , K01   , K02    , K03    , K04   , K05       , K06 , K07 , K08 , K09 , K0A , KC_BSPC   , \
-        T_ESC_N   , K11   , K12    , K13    , K14   , K15       , K16 , K17 , K18 , K19 , K1A , KC_QUOT   , \
-        KC_LSHIFT , K21   , K22    , K23    , K24   , K25       , K26 , K27 , K28 , K29 , K2A , KC_SFTENT , \
-        KC_LGUI   , T_NAV , KC_SPC , KC_ENT , T_SYM , KC_RGUI \
-    )
-#define LAYOUT_crkbd_base_wrapper(...) LAYOUT_crkbd_base(__VA_ARGS__)
-// clan-format on
 
+// Base layers
+#define QWERTY  DF(_QWERTY)
+#define COLEMAK DF(_COLEMAKDHM)
+
+// Layer toggle and switch
+#define T_NAV TT(_NAV)
+#define S_NAV MO(_NAV)
+
+#define T_SYM TT(_SYMBOLS)
+#define S_SYM MO(_SYMBOLS)
+
+#define ESC_NUM LT(_NUMBERS, KC_ESC)
+
+#define U_RDO SGUI(KC_Z)
+#define U_PST LGUI(KC_V)
+#define U_CPY LGUI(KC_C)
+#define U_CUT LGUI(KC_X)
+#define U_CMPST LSFT(LGUI(KC_V)) // ClipMenu
+#define U_UND LGUI(KC_Z)
+
+// Colemak Home-row mods
+#define CM_A CTL_T(KC_A)
+#define CM_R LALT_T(KC_R)
+#define CM_S LGUI_T(KC_S)
+#define CM_T LSFT_T(KC_T)
+#define CM_N LSFT_T(KC_N)
+#define CM_E LGUI_T(KC_E)
+#define CM_I LALT_T(KC_I)
+#define CM_O LCTL_T(KC_O)
+
+// Qwerty Home-row mods
+#define QM_A LCTL_T(KC_A)
+#define QM_S LALT_T(KC_S)
+#define QM_D LGUI_T(KC_D)
+#define QM_F LSFT_T(KC_F)
+#define QM_J LSFT_T(KC_J)
+#define QM_K LGUI_T(KC_K)
+#define QM_L LALT_T(KC_L)
+#define QM_SCLN LCTL_T(KC_SCLN)
+
+// Global tab forward and backward
+#define TAB_FWD LCTL(KC_TAB)
+#define TAB_BCK LCTL(LSFT(KC_TAB))
+#define TAB_CLS LCTL(KC_W)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_QWERTY] = LAYOUT_crkbd_base_wrapper(
-        _________________QWERTY_L1_________________, _________________QWERTY_R1_________________,
-        _________________QWERTY_L2_________________, _________________QWERTY_R2_________________,
-        _________________QWERTY_L3_________________, _________________QWERTY_R3_________________
+    [_COLEMAKDHM] = LAYOUT_split_3x6_3(
+        KC_TAB    , KC_Q    , KC_W    , KC_F    , KC_P    , KC_B       , KC_J    , KC_L    , KC_U    , KC_Y    , KC_SCLN , KC_BSPC,
+        ESC_NUM   , KC_A    , KC_R    , KC_S    , KC_T    , KC_G       , KC_M    , KC_N    , KC_E    , KC_I    , KC_O    , KC_QUOT ,
+        KC_LSHIFT , KC_Z    , KC_X    , KC_C    , KC_D    , KC_V       , KC_K    , KC_H    , KC_COMM , KC_DOT  , KC_SLASH, KC_SFTENT,
+                                        KC_LGUI , T_NAV   , KC_SPC     , KC_ENT , T_SYM , KC_RGUI
     ),
-    [_COLEMAKDHM] = LAYOUT_crkbd_base_wrapper(
-        ______________COLEMAK_MOD_DH_L1____________ , ______________COLEMAK_MOD_DH_R1____________ ,
-        ______________COLEMAK_MOD_DH_L2____________ , ______________COLEMAK_MOD_DH_R2____________ ,
-        ______________COLEMAK_MOD_DH_L3____________ , ______________COLEMAK_MOD_DH_R3____________
+    [_QWERTY] = LAYOUT_split_3x6_3( \
+        KC_TAB    , KC_Q    , KC_W    , KC_E    , KC_R    , KC_T       , KC_Y    , KC_U    , KC_I    , KC_O    , KC_P    , KC_BSPC,
+        ESC_NUM   , QM_A    , QM_S    , QM_D    , QM_F    , KC_G       , KC_H    , QM_J    , QM_K    , QM_L    , QM_SCLN , KC_QUOT,
+        KC_LSHIFT , KC_Z    , KC_X    , KC_C    , KC_V    , KC_B       , KC_N    , KC_M    , KC_COMM , KC_DOT  , KC_SLASH, KC_SFTENT,
+                                        KC_LGUI , T_NAV   , KC_SPC     , KC_ENT , T_SYM , KC_RGUI
     ),
-    [_NAV] = LAYOUT_wrapper(
-        _______ , ________________NAV_L1_____________________ , ________________NAV_R1_____________________ , _______ ,
-        _______ , ________________NAV_L2_____________________ , ________________NAV_R2_____________________ , _______ ,
-        _______ , ________________NAV_L3_____________________ , ________________NAV_R3_____________________ , _______ ,
-                                    _______ , _______, _______, _______ , _______, _______
+    [_NAV] = LAYOUT_split_3x6_3(
+        _______ , _______ , _______ , _______ , _______ , _______      , _______ , TAB_BCK , _______ , _______ , TAB_FWD  , _______,
+        _______ , _______ , _______ , _______ , _______ , _______      , _______ , KC_LEFT , KC_DOWN , KC_UP   , KC_RIGHT , _______,
+        U_RDO   , U_UND   , U_CUT   , U_CPY   , U_CMPST , _______      , _______ , KC_HOME , KC_PGDN , KC_PGUP , KC_END   , _______,
+                                        _______ , S_NAV   , _______      , _______ , _______ , _______
     ),
-    [_SYM] = LAYOUT_wrapper(
-        KC_TILD , __________________SYM_L1___________________ , __________________SYM_R1___________________ , _______ ,
-        KC_GRV  , __________________SYM_L2___________________ , __________________SYM_R2___________________ , _______ ,
-        _______ , __________________SYM_L3___________________ , __________________SYM_R3___________________ , _______ ,
-                                    _______ , _______, _______, _______ , _______, _______
+    [_SYMBOLS] = LAYOUT_split_3x6_3(
+        KC_TILD , KC_EXLM , KC_AT   , KC_LBRC , KC_RBRC , KC_BSLS,                 _______ , _______  , _______  , _______ , _______ , _______,
+        KC_GRV  , KC_HASH , KC_DLR  , KC_LPRN , KC_RPRN , KC_PIPE,                 KC_PLUS , KC_MINUS , KC_EQUAL , _______ , _______ , _______,
+        _______ , KC_PERC , KC_CIRC , KC_LCBR , KC_RCBR , KC_AMPR,                 KC_ASTR , KC_UNDS  , _______  , _______ , _______ , _______,
+                                _______ , _______ , _______ ,             _______ , S_SYM    , _______
     ),
-    [_ADJUST] = LAYOUT_wrapper(
-        _______ , ________________ADJUST_L1__________________ , ________________ADJUST_R1__________________ , _______ ,
-        _______ , ________________ADJUST_L2__________________ , ________________ADJUST_R2__________________ , _______ ,
-        _______ , ________________ADJUST_L3__________________ , ________________ADJUST_R3__________________ , _______ ,
-                                    _______ , _______, _______, _______ , _______, _______
+    [_NUMBERS] = LAYOUT_split_3x6_3(
+        _______ , KC_F1   , KC_F2   , KC_F3   , KC_F4  , KC_F5         , KC_PAUS , KC_7    , KC_8    , KC_9    , KC_MINS , _______,
+        _______ , KC_F6   , KC_F7   , KC_F8   , KC_F9  , KC_F10        , KC_ASTR , KC_4    , KC_5    , KC_6    , KC_PLUS , _______,
+        _______ , _______ , _______ , _______ , KC_F11 , KC_F12        , KC_0    , KC_1    , KC_2    , KC_3    , KC_EQL  , _______,
+                                _______ , _______ , _______      , _______ , _______  , _______
     ),
-    [_NUM] = LAYOUT_wrapper(
-        _______ , ________________NUMBER_L1__________________ , ________________NUMBER_R1__________________ , _______ ,
-        _______ , ________________NUMBER_L2__________________ , ________________NUMBER_R2__________________ , _______ ,
-        _______ , ________________NUMBER_L3__________________ , ________________NUMBER_R3__________________ , _______ ,
-                                    _______ , _______, _______, _______ , _______, _______
-    ),
+    [_MISC] = LAYOUT_split_3x6_3(
+        RESET  , XXXXXXX, _______, KC_NLCK, _______, COLEMAK,                      _______, KC_MPRV, KC_VOLU, KC_MNXT, _______, _______,
+        _______, XXXXXXX, _______, KC_CAPS, _______,  QWERTY,                      _______, KC_MSTP, KC_VOLD, KC_MPLY, _______, _______,
+        _______, KC_SLEP, XXXXXXX, _______, XXXXXXX, XXXXXXX,                      RGB_TOG, XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX, _______,
+                                            _______, _______, _______,    _______, _______, _______
+    )
 };
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    state = update_tri_layer_state(state, _NAV, _SYMBOLS, _MISC);
+    return state;
+}
+
 // clang-format on
 #ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (!is_keyboard_master()) {
-        return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+      if (is_keyboard_master()) {
+        return OLED_ROTATION_270;
+    } else {
+        return OLED_ROTATION_180;
     }
-    return rotation;
 }
-void oled_render_layer_state(void) {
-    oled_write_P(PSTR("Layer: "), false);
-    switch (get_highest_layer(layer_state)) {
+void render_status(void) {
+     switch (get_highest_layer(default_layer_state)) {
         case _QWERTY:
-            oled_write_ln_P(PSTR("QWERTY"), false);
+            oled_write_P(PSTR("QWRTY"), false);
             break;
         case _COLEMAKDHM:
-            oled_write_ln_P(PSTR("COLEMAK"), false);
-            break;
-        case _NAV:
-            oled_write_ln_P(PSTR("_NAV"), false);
-            break;
-        case _SYM:
-            oled_write_ln_P(PSTR("_SYM"), false);
-            break;
-        case _ADJUST:
-            oled_write_ln_P(PSTR("ADJUST"), false);
+            oled_write_P(PSTR("CLMK"), false);
             break;
     }
-}
+    oled_write_P(PSTR("\n"), false);
 
+    switch (get_highest_layer(layer_state)) {
+        case 0:
+            oled_write_ln_P(PSTR("     "), false);
+            break;
+        case _NUMBERS:
+            oled_write_ln_P(PSTR("NUM  "), false);
+            break;
+        case _NAV:
+            oled_write_ln_P(PSTR("NAV  "), false);
+            break;
+        case _SYMBOLS:
+            oled_write_ln_P(PSTR("SYM  "), false);
+            break;
+        case _MISC:
+            oled_write_ln_P(PSTR("MISC"), false);
+            break;
+        default:
+            oled_write_P(PSTR("?????"), false);
+            break;
+    }
+    oled_write_P(PSTR("\n"), false);
+
+    uint8_t modifiers = get_mods();
+
+    oled_write_P((modifiers & MOD_MASK_SHIFT) ? PSTR("SHIFT") : PSTR("\n"), false);
+    oled_write_P((modifiers & MOD_MASK_CTRL) ? PSTR("CTRL ") : PSTR("\n"), false);
+    oled_write_P((modifiers & MOD_MASK_ALT) ? PSTR("ALT  ") : PSTR("\n"), false);
+    oled_write_P((modifiers & MOD_MASK_GUI) ? PSTR("SUPER") : PSTR("\n"), false);
+
+    oled_write_P(PSTR("\n"), false);
+
+    uint8_t led_usb_state = host_keyboard_leds();
+    oled_write_P(PSTR("Mode:"), false);
+    oled_write_P(IS_LED_ON(led_usb_state, USB_LED_NUM_LOCK) ? PSTR(" NUM ") : PSTR("\n"), false);
+    oled_write_P(IS_LED_ON(led_usb_state, USB_LED_CAPS_LOCK) ? PSTR(" CAPS") : PSTR("\n"), false);
+}
 
 char keylog_str[24] = {};
 
-const char code_to_name[60] = {
-    ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-    'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\',
-    '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '};
+const char code_to_name[60] = {' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\', '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '};
 
 void set_keylog(uint16_t keycode, keyrecord_t *record) {
     char name = ' ';
@@ -154,23 +200,13 @@ void oled_render_logo(void) {
 
 void oled_task_user(void) {
     if (is_keyboard_master()) {
-        oled_render_layer_state();
-        oled_render_keylog();
+        render_status();
+        // oled_render_keylog();
     } else {
         oled_render_logo();
     }
 }
 #endif  // OLED_ENABLE
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, _NAV, _SYM, _ADJUST);
-}
-
-void persistent_default_layer_set(uint16_t default_layer) {
-    print("SET DEFAULT\n");
-    eeconfig_update_default_layer(default_layer);
-    default_layer_set(default_layer);
-}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef OLED_ENABLE
@@ -178,37 +214,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         set_keylog(keycode, record);
     }
 #endif
-#ifdef CONSOLE_ENABLE
-    uprintf("KL: kc: 0x%04X, %u x %u, Q: 0x%04X, C: 0x%04X, E: 0x%04X\n", keycode, record->event.key.col, record->event.key.row, QWERTY, COLEMAK, T_ESC_N);
-#endif
-    switch (keycode)
-    {
-        case QWERTY:
-            if (record->event.pressed)
-            {
-                print("QWERTY\n");
-                persistent_default_layer_set(1UL<<_QWERTY);
-            }
-            return false;
-            break;
-        case COLEMAK:
-            if (record->event.pressed)
-            {
-                print("COLEMAK\n");
-                persistent_default_layer_set(1UL<<_COLEMAKDHM);
-            }
-            return false;
-            break;
-        default:
-            break;
-    }
     return true;
 }
 
 void keyboard_post_init_user(void) {
-  // Customise these values to desired behaviour
-  debug_enable=true;
-//   debug_matrix=true;
-  debug_keyboard=true;
-  //debug_mouse=true;
+    // Customise these values to desired behaviour
+    debug_enable = true;
+    //   debug_matrix=true;
+    debug_keyboard = true;
+    // debug_mouse=true;
 }
