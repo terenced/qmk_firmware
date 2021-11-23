@@ -54,49 +54,50 @@
 #define TAB_BCK LCTL(LSFT(KC_TAB))
 #define TAB_CLS LCTL(KC_W)
 
+// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAKDHM] = LAYOUT_split_3x6_3(
         KC_TAB    , KC_Q    , KC_W    , KC_F    , KC_P    , KC_B       , KC_J    , KC_L    , KC_U    , KC_Y    , KC_SCLN , KC_BSPC,
-        ESC_NUM   , KC_A    , KC_R    , KC_S    , KC_T    , KC_G       , KC_M    , KC_N    , KC_E    , KC_I    , KC_O    , KC_QUOT ,
+        ESC_NUM   , CM_A    , CM_R    , CM_S    , CM_T    , KC_G       , KC_M    , CM_N    , CM_E    , CM_I    , CM_O    , KC_QUOT ,
         KC_LSHIFT , KC_Z    , KC_X    , KC_C    , KC_D    , KC_V       , KC_K    , KC_H    , KC_COMM , KC_DOT  , KC_SLASH, KC_SFTENT,
-                                        KC_LGUI , T_NAV   , KC_SPC     , KC_ENT , T_SYM , KC_RGUI
+                                        KC_LGUI , T_NAV   , KC_SPC     , KC_SPC , T_SYM,   KC_RGUI
     ),
     [_QWERTY] = LAYOUT_split_3x6_3( \
         KC_TAB    , KC_Q    , KC_W    , KC_E    , KC_R    , KC_T       , KC_Y    , KC_U    , KC_I    , KC_O    , KC_P    , KC_BSPC,
         ESC_NUM   , QM_A    , QM_S    , QM_D    , QM_F    , KC_G       , KC_H    , QM_J    , QM_K    , QM_L    , QM_SCLN , KC_QUOT,
         KC_LSHIFT , KC_Z    , KC_X    , KC_C    , KC_V    , KC_B       , KC_N    , KC_M    , KC_COMM , KC_DOT  , KC_SLASH, KC_SFTENT,
-                                        KC_LGUI , T_NAV   , KC_SPC     , KC_ENT , T_SYM , KC_RGUI
+                                        KC_LGUI , T_NAV   , KC_SPC     , KC_SPC , T_SYM,   KC_RGUI
     ),
     [_NAV] = LAYOUT_split_3x6_3(
-        _______ , _______ , _______ , _______ , _______ , _______      , _______ , TAB_BCK , _______ , _______ , TAB_FWD  , _______,
+        KC_TILD , KC_GRV , _______ , _______ , _______ , _______       , _______ , TAB_BCK , _______ , _______ , TAB_FWD  , _______,
         _______ , _______ , _______ , _______ , _______ , _______      , _______ , KC_LEFT , KC_DOWN , KC_UP   , KC_RIGHT , _______,
-        U_RDO   , U_UND   , U_CUT   , U_CPY   , U_CMPST , _______      , _______ , KC_HOME , KC_PGDN , KC_PGUP , KC_END   , _______,
-                                        _______ , S_NAV   , _______      , _______ , _______ , _______
+        U_RDO   , U_UND   , U_CUT   , U_CPY   , U_PST , U_CMPST        , _______ , KC_HOME , KC_PGDN , KC_PGUP , KC_END   , _______,
+                                        _______ , _______   , _______      , _______ , MO(_MISC) , _______
     ),
     [_SYMBOLS] = LAYOUT_split_3x6_3(
-        KC_TILD , KC_EXLM , KC_AT   , KC_LBRC , KC_RBRC , KC_BSLS,                 _______ , _______  , _______  , _______ , _______ , _______,
-        KC_GRV  , KC_HASH , KC_DLR  , KC_LPRN , KC_RPRN , KC_PIPE,                 KC_PLUS , KC_MINUS , KC_EQUAL , _______ , _______ , _______,
-        _______ , KC_PERC , KC_CIRC , KC_LCBR , KC_RCBR , KC_AMPR,                 KC_ASTR , KC_UNDS  , _______  , _______ , _______ , _______,
-                                _______ , _______ , _______ ,             _______ , S_SYM    , _______
+        KC_TILD , KC_EXLM , KC_AT   , KC_LPRN , KC_RPRN , KC_BSLS,                 _______ , _______  , _______  , _______ , _______ , _______,
+        KC_GRV  , KC_HASH , KC_DLR  , KC_LCBR , KC_RCBR , KC_PIPE,                 KC_PLUS , KC_MINUS , KC_EQUAL , _______ , _______ , _______,
+        _______ , KC_PERC , KC_CIRC , KC_LBRC , KC_RBRC , KC_AMPR,                 KC_ASTR , KC_UNDS  , _______  , _______ , _______ , _______,
+                                _______ , MO(_MISC) , _______ ,             _______ , _______ , _______
     ),
     [_NUMBERS] = LAYOUT_split_3x6_3(
-        _______ , KC_F1   , KC_F2   , KC_F3   , KC_F4  , KC_F5         , KC_PAUS , KC_7    , KC_8    , KC_9    , KC_MINS , _______,
+        _______ , KC_F1   , KC_F2   , KC_F3   , KC_F4  , KC_F5         , KC_PLUS , KC_7    , KC_8    , KC_9    , KC_MINS , _______,
         _______ , KC_F6   , KC_F7   , KC_F8   , KC_F9  , KC_F10        , KC_ASTR , KC_4    , KC_5    , KC_6    , KC_PLUS , _______,
         _______ , _______ , _______ , _______ , KC_F11 , KC_F12        , KC_0    , KC_1    , KC_2    , KC_3    , KC_EQL  , _______,
                                 _______ , _______ , _______      , _______ , _______  , _______
     ),
     [_MISC] = LAYOUT_split_3x6_3(
-        RESET  , XXXXXXX, _______, KC_NLCK, _______, COLEMAK,                      _______, KC_MPRV, KC_VOLU, KC_MNXT, _______, _______,
-        _______, XXXXXXX, _______, KC_CAPS, _______,  QWERTY,                      _______, KC_MSTP, KC_VOLD, KC_MPLY, _______, _______,
+        RESET  , XXXXXXX, _______, KC_NLCK, _______, COLEMAK,                      RGB_M_T, KC_MPRV, KC_VOLU, KC_MNXT, _______, _______,
+        _______, XXXXXXX, _______, KC_CAPS, _______,  QWERTY,                      RGB_M_B, KC_MSTP, KC_VOLD, KC_MPLY, _______, _______,
         _______, KC_SLEP, XXXXXXX, _______, XXXXXXX, XXXXXXX,                      RGB_TOG, XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX, _______,
                                             _______, _______, _______,    _______, _______, _______
     )
 };
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-    state = update_tri_layer_state(state, _NAV, _SYMBOLS, _MISC);
-    return state;
-}
+// layer_state_t layer_state_set_user(layer_state_t state) {
+//     state = update_tri_layer_state(state, _NAV, _SYMBOLS, _MISC);
+//     return state;
+// }
 
 // clang-format on
 #ifdef OLED_ENABLE
