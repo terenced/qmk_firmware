@@ -1,24 +1,25 @@
 #include QMK_KEYBOARD_H
 #include <stdio.h>
 
-#define _COLEMAKDHM  0
-#define _QWERTY  1
+#define _COLEMAKDHM 0
+#define _QWERTY 1
 #define _NAV 2
 #define _SYMBOLS 3
 #define _NUMBERS 4
-#define _MISC  5
-
+#define _MISC 5
 
 // Base layers
-#define QWERTY  DF(_QWERTY)
+#define QWERTY DF(_QWERTY)
 #define COLEMAK DF(_COLEMAKDHM)
 
 // Layer toggle and switch
 #define T_NAV TT(_NAV)
 #define S_NAV MO(_NAV)
+#define NAVSPC LT(_NAV, KC_SPC)
 
 #define T_SYM TT(_SYMBOLS)
 #define S_SYM MO(_SYMBOLS)
+#define SYMSPC LT(_SYMBOLS, KC_SPC)
 
 #define ESC_NUM LT(_NUMBERS, KC_ESC)
 
@@ -26,7 +27,7 @@
 #define U_PST LGUI(KC_V)
 #define U_CPY LGUI(KC_C)
 #define U_CUT LGUI(KC_X)
-#define U_CMPST LSFT(LGUI(KC_V)) // ClipMenu
+#define U_CMPST LSFT(LGUI(KC_V))  // ClipMenu
 #define U_UND LGUI(KC_Z)
 
 // Colemak Home-row mods
@@ -57,19 +58,19 @@
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAKDHM] = LAYOUT_split_3x6_3(
-        KC_TAB    , KC_Q    , KC_W    , KC_F    , KC_P    , KC_B       , KC_J    , KC_L    , KC_U    , KC_Y    , KC_SCLN , KC_BSPC,
-        ESC_NUM   , CM_A    , CM_R    , CM_S    , CM_T    , KC_G       , KC_M    , CM_N    , CM_E    , CM_I    , CM_O    , KC_QUOT ,
-        KC_LSHIFT , KC_Z    , KC_X    , KC_C    , KC_D    , KC_V       , KC_K    , KC_H    , KC_COMM , KC_DOT  , KC_SLASH, KC_SFTENT,
-                                        KC_LGUI , T_NAV   , KC_SPC     , KC_SPC , T_SYM,   KC_RGUI
+        KC_TAB       , KC_Q , KC_W , KC_F , KC_P , KC_B , KC_J , KC_L , KC_U    , KC_Y   , KC_SCLN  , KC_BSPC   ,
+        LSFT_T(KC_ESC) , CM_A , CM_R , CM_S , CM_T , KC_G , KC_M , CM_N , CM_E    , CM_I   , CM_O     , KC_QUOT   ,
+        KC_LSHIFT    , KC_Z , KC_X , KC_C , KC_D , KC_V , KC_K , KC_H , KC_COMM , KC_DOT , KC_SLASH , KC_SFTENT ,
+                                        KC_LGUI , NAVSPC  , ESC_NUM    , TG(_NAV) , SYMSPC,   LM(_NAV, MOD_LGUI)
     ),
     [_QWERTY] = LAYOUT_split_3x6_3( \
-        KC_TAB    , KC_Q    , KC_W    , KC_E    , KC_R    , KC_T       , KC_Y    , KC_U    , KC_I    , KC_O    , KC_P    , KC_BSPC,
-        ESC_NUM   , QM_A    , QM_S    , QM_D    , QM_F    , KC_G       , KC_H    , QM_J    , QM_K    , QM_L    , QM_SCLN , KC_QUOT,
-        KC_LSHIFT , KC_Z    , KC_X    , KC_C    , KC_V    , KC_B       , KC_N    , KC_M    , KC_COMM , KC_DOT  , KC_SLASH, KC_SFTENT,
-                                        KC_LGUI , T_NAV   , KC_SPC     , KC_SPC , T_SYM,   KC_RGUI
+        KC_TAB       , KC_Q , KC_W , KC_E , KC_R , KC_T , KC_Y , KC_U , KC_I    , KC_O   , KC_P     , KC_BSPC   ,
+        LSFT_T(KC_ESC) , QM_A , QM_S , QM_D , QM_F , KC_G , KC_H , QM_J , QM_K    , QM_L   , QM_SCLN  , KC_QUOT   ,
+        KC_LSHIFT    , KC_Z , KC_X , KC_C , KC_V , KC_B , KC_N , KC_M , KC_COMM , KC_DOT , KC_SLASH , KC_SFTENT ,
+                                        KC_LGUI , NAVSPC  , ESC_NUM    , TG(_NAV) , SYMSPC,   LM(_NAV, MOD_LGUI)
     ),
     [_NAV] = LAYOUT_split_3x6_3(
-        KC_TILD , KC_GRV , _______ , _______ , _______ , _______       , _______ , TAB_BCK , _______ , _______ , TAB_FWD  , _______,
+        KC_TAB , KC_TILD , KC_GRV  , _______ , _______ , _______       , _______ , TAB_BCK , _______ , _______ , TAB_FWD  , _______,
         _______ , _______ , _______ , _______ , _______ , _______      , _______ , KC_LEFT , KC_DOWN , KC_UP   , KC_RIGHT , _______,
         U_RDO   , U_UND   , U_CUT   , U_CPY   , U_PST , U_CMPST        , _______ , KC_HOME , KC_PGDN , KC_PGUP , KC_END   , _______,
                                         _______ , _______   , _______      , _______ , MO(_MISC) , _______
@@ -94,22 +95,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-// layer_state_t layer_state_set_user(layer_state_t state) {
-//     state = update_tri_layer_state(state, _NAV, _SYMBOLS, _MISC);
-//     return state;
-// }
-
 // clang-format on
 #ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-      if (is_keyboard_master()) {
+    if (is_keyboard_master()) {
         return OLED_ROTATION_270;
     } else {
         return OLED_ROTATION_180;
     }
 }
 void render_status(void) {
-     switch (get_highest_layer(default_layer_state)) {
+    switch (get_highest_layer(default_layer_state)) {
         case _QWERTY:
             oled_write_P(PSTR("QWRTY"), false);
             break;
@@ -191,11 +187,7 @@ void render_bootmagic_status(bool status) {
 }
 
 void oled_render_logo(void) {
-    static const char PROGMEM crkbd_logo[] = {
-        0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94,
-        0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4,
-        0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
-        0};
+    static const char PROGMEM crkbd_logo[] = {0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94, 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4, 0};
     oled_write_P(crkbd_logo, false);
 }
 
