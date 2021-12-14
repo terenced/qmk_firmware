@@ -55,8 +55,8 @@
 
 #define CTL_Z LCTL_T(KC_Z)
 // Global tab forward and backward
-#define TAB_FWD LCTL(KC_TAB)
-#define TAB_BCK LCTL(LSFT(KC_TAB))
+#define TAB_BCK LGUI(LSFT(KC_LBRACKET))
+#define TAB_FWD LGUI(LSFT(KC_RBRACKET))
 #define TAB_CLS LCTL(KC_W)
 #define CMD_NAV LM(_NAV, MOD_LGUI)
 #define PNE_BCK LGUI_T(LALT_T(KC_LEFT))
