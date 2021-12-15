@@ -59,8 +59,8 @@
 #define TAB_FWD LGUI(LSFT(KC_RBRACKET))
 #define TAB_CLS LCTL(KC_W)
 #define CMD_NAV LM(_NAV, MOD_LGUI)
-#define PNE_BCK LGUI_T(LALT_T(KC_LEFT))
-#define PNE_FWD LGUI_T(LALT_T(KC_LEFT))
+#define PNE_BCK LGUI(LALT(KC_LEFT))
+#define PNE_FWD LGUI(LALT(KC_RIGHT))
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -97,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MISC] = LAYOUT_split_3x6_3(
         RESET   , XXXXXXX , _______ , KC_NLCK , _______ , COLEMAK , RGB_M_T , KC_MPRV , XXXXXXX , KC_MNXT , _______ , _______ ,
         _______ , XXXXXXX , _______ , KC_CAPS , _______ , QWERTY  , RGB_M_B , KC_MPRV , KC_MPLY , XXXXXXX , KC_MNXT , _______ ,
-        _______ , KC_SLEP , XXXXXXX , _______ , XXXXXXX , XXXXXXX , RGB_TOG , KC_MUTE , KC_VOLD , KC_VOLD , XXXXXXX , _______ ,
+        _______ , KC_SLEP , XXXXXXX , _______ , XXXXXXX , XXXXXXX , RGB_TOG , KC_MUTE , KC_VOLD , KC_VOLU , XXXXXXX , _______ ,
                                             _______, _______, _______,    _______, _______, _______
     )
 };
@@ -198,13 +198,14 @@ void oled_render_logo(void) {
     oled_write_P(crkbd_logo, false);
 }
 
-void oled_task_user(void) {
+bool oled_task_user(void) {
     if (is_keyboard_master()) {
         render_status();
         // oled_render_keylog();
     } else {
         oled_render_logo();
     }
+    return false;
 }
 #endif  // OLED_ENABLE
 
