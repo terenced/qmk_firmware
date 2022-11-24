@@ -24,6 +24,7 @@
 
 #define ESC_NUM LT(_NUM, KC_ESC)
 #define SPCNUM LT(_NUM, KC_SPC)
+#define T_NUM TT(_NUM)
 
 #define SFT_ESC LSFT_T(KC_ESC)
 #define U_RDO SGUI(KC_Z)
@@ -67,14 +68,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAKDHM] = LAYOUT_split_3x6_3(
         KC_TAB   , KC_Q   , KC_W   , KC_F    , KC_P   , KC_B     , KC_J , KC_L , KC_U    , KC_Y   , KC_SCLN  , KC_BSPC   ,
         SFT_ESC  , CM_A   , CM_R   , CM_S    , CM_T   , KC_G     , KC_M , CM_N , CM_E    , CM_I   , CM_O     , KC_QUOT   ,
-        TT(_NUM) , CTL_Z  , KC_X   , KC_C    , KC_D   , KC_V     , KC_K , KC_H , KC_COMM , KC_DOT , KC_SLASH , KC_SFTENT ,
-                                      S_SYM  , NAVSPC , SPCNUM , CMD_NAV , ENTSYM , T_SYM 
+        KC_LSFT , CTL_Z  , KC_X   , KC_C    , KC_D   , KC_V     , KC_K , KC_H , KC_COMM , KC_DOT , KC_SLASH , KC_SFTENT ,
+                                      T_NUM  , NAVSPC , S_SYM , NAVSPC , ENTSYM , SPCNUM 
     ),
     [_QWERTY] = LAYOUT_split_3x6_3( \
         KC_TAB   , KC_Q , KC_W , KC_E , KC_R , KC_T , KC_Y , KC_U , KC_I    , KC_O   , KC_P     , KC_BSPC   ,
         SFT_ESC  , QM_A , QM_S , QM_D , QM_F , KC_G , KC_H , QM_J , QM_K    , QM_L   , QM_SCLN  , KC_QUOT   ,
-        TT(_NUM) , KC_Z , KC_X , KC_C , KC_V , KC_B , KC_N , KC_M , KC_COMM , KC_DOT , KC_SLASH , KC_SFTENT ,
-                                      S_SYM  , NAVSPC , SPCNUM , CMD_NAV , ENTSYM , T_SYM 
+        KC_LSFT , KC_Z , KC_X , KC_C , KC_V , KC_B , KC_N , KC_M , KC_COMM , KC_DOT , KC_SLASH , KC_SFTENT ,
+                                      T_NUM  , NAVSPC , S_SYM , NAVSPC , ENTSYM , SPCNUM 
     ),
     [_NAV] = LAYOUT_split_3x6_3(
         KC_TAB , KC_TILD , KC_GRV  , _______ , _______ , _______       , _______ , TAB_BCK , PNE_BCK , PNE_FWD , TAB_FWD  , _______,
@@ -84,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_SYM] = LAYOUT_split_3x6_3(
         KC_TILD , KC_EXLM , KC_AT   , KC_HASH     , KC_DLR      , KC_PERC , KC_CIRC , KC_AMPR  , KC_ASTR   , KC_LPRN     , KC_RPRN     , KC_EQUAL ,
-        KC_GRV  , _______ , KC_LPRN , KC_LCBR     , KC_RCBR     , KC_RPRN , KC_PLUS , KC_MINUS , KC_EQUAL  , KC_LCBR     , KC_LCBR     , KC_PIPE  ,
+        KC_GRV  , _______ , KC_LPRN , KC_LCBR     , KC_RCBR     , KC_RPRN , KC_PLUS , KC_MINUS , KC_EQUAL  , KC_LCBR     , KC_RCBR     , KC_PIPE  ,
         _______ , _______ , KC_LABK , KC_LBRACKET , KC_RBRACKET , KC_RABK , KC_ASTR , KC_UNDS  , KC_BSLASH , KC_LBRACKET , KC_RBRACKET , _______  ,
                                 _______ , MO(_MISC) , _______ ,             _______ , _______ , _______
     ),
